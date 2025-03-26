@@ -77,26 +77,68 @@ class DailyAvailabilityTest extends PHPUnitTestCase
      */
     public function it_does_not_include_times_that_are_excluded()
     {
-        // Your test here
+        // Given an instance of DailyAvailability with a start and end time
+        $scheduleBlock = new DailyAvailability(startTime: 720, endTime: 760);
+
+        $scheduleBlock->exclude(740, 750);
+
+        // When we fetch the options using a 15-minute interval
+        $fifteenMinuteOptions = $scheduleBlock->getOptions(10);
+
+        // Then we should be returned a list of available seating options every ten minutes
+        $this->assertSame([
+            720,
+            730,
+            760,
+        ], $fifteenMinuteOptions);
     }
+
+    /**
+     * Our restaurant partners require that they have the ability to block off certain dates and times. We need to
+     * implement an exclude method to optionally include a block of times that should not be available.
+     *
+     * @test
+     */
+    public function it_does_not_include_times_that_are_excluded_with_reversed_excluded_times()
+    {
+        // Given an instance of DailyAvailability with a start and end time
+        $scheduleBlock = new DailyAvailability(startTime: 720, endTime: 760);
+
+        $scheduleBlock->exclude(startTime: 750, endTime: 740);
+
+        // When we fetch the options using a 15-minute interval
+        $fifteenMinuteOptions = $scheduleBlock->getOptions(intervalInMinutes: 10);
+
+        // Then we should be returned a list of available seating options every ten minutes
+        $this->assertSame([
+            720,
+            730,
+            760,
+        ], $fifteenMinuteOptions);
+    }
+
 
     /**
      * What else could we test for? Any room for improvement?
      *
      * @test
      */
-    public function it_()
-    {
+    //public function it_()
+    //{
 
-    }
+    //}
 
     /**
      * Feel free to add more tests
      *
      * @test
      */
-    public function it_also_()
-    {
+    //public function it_also_()
+    //{
 
-    }
+    //}
+
+    // null start/end, and returning it
+    // getOptions = no interval?... no sense
+    // wrap 24h coonstruct & exclude
 }

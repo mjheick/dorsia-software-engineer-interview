@@ -7,8 +7,10 @@ namespace Interview;
  * depending on restaurant settings.
  */
 class DailyAvailability {
-    public ?int $excludedStartTime;
-    public ?int $excludedEndTime;
+    public ?int $excludedStartTime = null;
+    public ?int $excludedEndTime = null;
+    public ?int $StartTime = null;
+    public ?int $EndTime = null;
 
     /**
      * New instances of this class accept the start and end minutes to create a time range.
@@ -18,7 +20,26 @@ class DailyAvailability {
      */
     public function __construct(public int $startTime, public int $endTime)
     {
-        //
+        $this->StartTime = $startTime;
+        $this->EndTime = $endTime;
+    }
+
+
+    /**
+     * Defines an excluded time period for this instance of DailyAvailability.
+     */
+    public function exclude(int $startTime, int $endTime): void
+    {
+        if ($startTime > $endtime)
+        {
+            $this->excludedStartTime = $endTime;
+            $this->excludedEndTime = $startTime;
+        }
+        else
+        {
+            $this->excludedStartTime = $startTime;
+            $this->excludedEndTime = $endTime;
+        }
     }
 
     /**
@@ -33,17 +54,22 @@ class DailyAvailability {
      */
     public function getOptions(int $intervalInMinutes): array
     {
-        return [];
-    }
-
-    /**
-     * Defines an excluded time period for this instance of DailyAvailability.
-     */
-    public function exclude(int $startTime, int $endTime): static
-    {
-        $this->excludedStartTime = $startTime;
-        $this->excludedEndTime = $endTime;
-
-        return $this;
+        $intervals = [];
+        $interval_start = $this->StartTime;
+        while ($interval_start <= $this->EndTime)
+        {
+            if (!is_null($this->excludedStartTime)) {
+                if (!(($interval_start >= $this->excludedStartTime) && ($interval_start <= $this->excludedEndTime)))
+                {
+                    $intervals[] = $interval_start;
+                }
+            }
+            else
+            {
+                $intervals[] = $interval_start;
+            }
+            $interval_start += $intervalInMinutes;
+        }
+        return $intervals;
     }
 }
