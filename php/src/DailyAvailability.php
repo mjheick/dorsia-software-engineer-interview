@@ -30,7 +30,7 @@ class DailyAvailability {
      */
     public function exclude(int $startTime, int $endTime): void
     {
-        if ($startTime > $endtime)
+        if ($startTime > $endTime)
         {
             $this->excludedStartTime = $endTime;
             $this->excludedEndTime = $startTime;
