@@ -7,6 +7,12 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 class DailyAvailabilityTest extends PHPUnitTestCase
 {
+    public function setUp(): void
+    {
+      # Turn on error reporting
+      error_reporting(E_ALL);
+      // ...
+    }
     /**
      * Our restaurant partners supply a time range that they can accept reservations. We need to display all the
      * available seating options within this time range for members to select. Depending on the preferences of the
